@@ -55,7 +55,7 @@ module.exports = {
       async update(req, res){
         const { title, priority, note } = req.body
 
-        const { user_id } = req.headers
+        const { user_id, task_id } = req.headers
 
         const user = await User.findById(user_id)
 
@@ -63,16 +63,29 @@ module.exports = {
           return res.status(400).json({ error: 'User does not exists' })
         }
 
-        const task = await Tasks.updateOne({
-          user: user_id,
+        const task = await Tasks.findById(task_id).update({
           title,
           priority,
           note
-          },
-          function (err){
-            if(err) console.log(err);
-            return res.json(task)
-          })
+        },
+        function (err){
+          if(err) console.log(err);        
+        })
+
+        return res.json(task)
+
+        
+        // const task = await Tasks.updateOne({
+        //   user: user_id,
+        //   _id: task_id,
+        //   title,
+        //   priority,
+        //   note
+        //   },
+        //   function (err){
+        //     if(err) console.log(err);
+        //     return res.json(task)
+        //   })
 
       }
 
